@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             // pass double.infinity to prevent shrinking of the painter area to 0.
             width: width * 0.99995,
             height: double.infinity,
-            color: Colors.yellow,
+            color: Colors.white60,
             child: CustomPaint(painter: FaceOutlinePainter()),
           ),
         ),
@@ -56,15 +56,15 @@ class FaceOutlinePainter extends CustomPainter {
 }
 
 void drawRect(canvas, squareSize, paint) {
+  double fontsize = squareSize / 1.5;
+
   final textStyle = TextStyle(
     color: Colors.red,
-    fontSize: 30,
+    fontSize: fontsize,
   );
   TextSpan span = new TextSpan(text: 'Yrfc', style: textStyle);
   TextPainter tp = new TextPainter(
-      text: span,
-      textAlign: TextAlign.left,
-      textDirection: TextDirection.ltr);
+      text: span, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
   tp.layout();
 
   for (double down = 0; down < 12; down++) {
@@ -78,10 +78,11 @@ void drawRect(canvas, squareSize, paint) {
         paint,
       );
     }
+    /*
     TextSpan span2 = new TextSpan(text: down.toString(), style: textStyle);
     tp.text = span2;
     tp.layout();
-    tp.paint(canvas, new Offset(squareSize * 6.5, down * squareSize));
+    tp.paint(canvas, new Offset(squareSize * 6.5, down * squareSize));*/
   }
 }
 
@@ -97,13 +98,14 @@ void drawCircles(across, squareSize, paint, canvas) {
   ];
   int down = data[5][across.round()];
   paint.style = PaintingStyle.fill;
+  double fontsize = squareSize / 1.3;
   final textStyle = TextStyle(
     color: Colors.red,
     fontSize: 30,
   );
   final textStyle2 = TextStyle(
     color: Colors.white,
-    fontSize: 30,
+    fontSize: fontsize,
   );
   TextSpan span = new TextSpan(text: 'Yrfc', style: textStyle);
   TextPainter tp = new TextPainter(
@@ -124,7 +126,7 @@ void drawCircles(across, squareSize, paint, canvas) {
         new Offset(squareSize * across + (squareSize / 4), squareSize * down));
   else
     tp.paint(canvas,
-        new Offset(squareSize * across - (squareSize / 15), squareSize * down));
+        new Offset(squareSize * across + (squareSize / 35), squareSize * down));
   paint.style = PaintingStyle.stroke;
 }
 
