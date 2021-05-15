@@ -43,29 +43,41 @@ class FaceOutlinePainter extends CustomPainter {
 
     double squareSize = size.width / 10.0;
 
-    drawRect(canvas, squareSize, paint);
+    //drawRect(canvas, squareSize, paint);
+    drawFrets(canvas, squareSize, paint);
+    drawStrings(canvas, squareSize, paint);
 
     drawMarkers(squareSize, paint, canvas);
 
     for (double across = 0; across < 6; across++)
       drawCircles(across, squareSize, paint, canvas);
+
+
   }
 
   @override
   bool shouldRepaint(FaceOutlinePainter oldDelegate) => false;
 }
 
+void drawFrets(canvas, squareSize, paint) {
+
+  double half= squareSize/2;
+  paint.color = Colors.cyan;
+  for (double down = 0; down < 13; down++) { //
+    canvas.drawLine(Offset(half, down* squareSize +half), Offset(squareSize*5.5, down* squareSize+half), paint);
+  }
+}
+
+void drawStrings(canvas, squareSize, paint) {
+
+  double half= squareSize/2;
+  paint.color = Colors.amberAccent;
+  for (double across = 0; across < 6; across++)
+    canvas.drawLine(Offset( across* squareSize +half,half), Offset( across* squareSize+half,squareSize*12.5), paint);
+}
+
 void drawRect(canvas, squareSize, paint) {
   double fontsize = squareSize / 1.5;
-
-  final textStyle = TextStyle(
-    color: Colors.red,
-    fontSize: fontsize,
-  );
-  TextSpan span = new TextSpan(text: 'Yrfc', style: textStyle);
-  TextPainter tp = new TextPainter(
-      text: span, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
-  tp.layout();
 
   for (double down = 0; down < 12; down++) {
     for (double across = 0; across < 5; across++) {
@@ -74,15 +86,9 @@ void drawRect(canvas, squareSize, paint) {
             Rect.fromLTWH(squareSize * across + (squareSize / 2),
                 (down * squareSize) + (squareSize / 2), squareSize, squareSize),
             Radius.circular(0)),
-        //Rect.fromLTWH(20, 40, 100, 100), Radius.circular(20)),
         paint,
       );
     }
-    /*
-    TextSpan span2 = new TextSpan(text: down.toString(), style: textStyle);
-    tp.text = span2;
-    tp.layout();
-    tp.paint(canvas, new Offset(squareSize * 6.5, down * squareSize));*/
   }
 }
 
@@ -107,10 +113,7 @@ void drawCircles(across, squareSize, paint, canvas) {
     color: Colors.white,
     fontSize: fontsize,
   );
-  TextSpan span = new TextSpan(text: 'Yrfc', style: textStyle);
-  TextPainter tp = new TextPainter(
-      text: span, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
-  tp.layout();
+
 
   paint.color = Colors.red;
   canvas.drawOval(
@@ -118,15 +121,18 @@ void drawCircles(across, squareSize, paint, canvas) {
         squareSize * across, squareSize * down, squareSize, squareSize),
     paint,
   );
+
   TextSpan span2 = new TextSpan(text: down.toString(), style: textStyle2);
+  TextPainter tp = new TextPainter(
+      text: span2, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
   tp.text = span2;
   tp.layout();
   if (down < 10)
     tp.paint(canvas,
-        new Offset(squareSize * across + (squareSize / 4), squareSize * down));
+        new Offset(squareSize * across + (squareSize / 4), squareSize * down +squareSize/15));
   else
     tp.paint(canvas,
-        new Offset(squareSize * across + (squareSize / 35), squareSize * down));
+        new Offset(squareSize * across + (squareSize / 35), squareSize * down +squareSize/15));
   paint.style = PaintingStyle.stroke;
 }
 
@@ -134,13 +140,23 @@ void drawMarkers(squareSize, paint, canvas) {
   final data = [3, 5, 7, 9, 12];
   paint.color = Colors.black;
   paint.style = PaintingStyle.fill;
-  for (int i = 0; i < data.length; i++) {
+  for (int i = 0; i < data.length-1; i++) {
     canvas.drawOval(
       Rect.fromLTWH(squareSize * 2.75, squareSize * (data[i] - 0.25),
           squareSize / 2, squareSize / 2),
       paint,
     );
   }
+  canvas.drawOval(
+    Rect.fromLTWH(squareSize * 1.75, squareSize * (data[data.length-1] - 0.25),
+        squareSize / 2, squareSize / 2),
+    paint,
+  );
+  canvas.drawOval(
+    Rect.fromLTWH(squareSize * 3.75, squareSize * (data[data.length-1] - 0.25),
+        squareSize / 2, squareSize / 2),
+    paint,
+  );
   paint.style = PaintingStyle.stroke;
 }
 
