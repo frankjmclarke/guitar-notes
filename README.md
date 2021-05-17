@@ -1,6 +1,6 @@
-# delme
+# Guitar Notes
 
-A new Flutter project.
+Learn the notes on the guitar fingerboard every time you tune up.
 
 ## Getting Started
 
