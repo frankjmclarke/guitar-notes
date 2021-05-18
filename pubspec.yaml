@@ -47,7 +47,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/330.wav
+   - assets/220.wav
+   - assets/246.94.wav
+   - assets/261.63.wav
+   - assets/311.13.wav
+   - assets/329.63.wav
+   - assets/349.23.wav
+   - assets/392.wav
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

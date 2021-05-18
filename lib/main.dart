@@ -49,7 +49,7 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
     this.setState(() {
       firstDay = data;
     });
-    var duration = await player.setAsset('assets/330.wav');
+    //var duration = await player.setAsset('assets/330.wav');
   }
 
   Future<Null> incrementCounter() async {
@@ -102,6 +102,7 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
                     setState(() {
                       firstDay = 0;
                     });
+                    play(player,"220.wav");
                   },
                   child: Text('A'),
                 ),
@@ -119,6 +120,7 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
                     setState(() {
                       firstDay = 1;
                     });
+                    play(player,"246.94.wav");
                   },
                   child: Text('B'),
                 ),
@@ -136,6 +138,7 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
                     setState(() {
                       firstDay = 2;
                     });
+                    play(player,"261.63.wav");
                   },
                   child: Text('C'),
                 ),
@@ -153,6 +156,7 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
                     setState(() {
                       firstDay = 3;
                     });
+                    play(player,"311.13.wav");
                   },
                   child: Text('D'),
                 ),
@@ -170,7 +174,7 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
                     setState(() {
                       firstDay = 4;
                     });
-                    play(player);
+                    play(player,"329.63.wav");
                   },
                   child: Text('E'),
                 ),
@@ -188,7 +192,9 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
                     setState(() {
                       firstDay = 5;
                     });
+                    play(player,"349.23.wav");
                   },
+
                   child: Text('F'),
                 ),
               ),
@@ -205,6 +211,7 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
                     setState(() {
                       firstDay = 6;
                     });
+                    play(player,"392.wav");
                   },
                   child: Text('G'),
                 ),
@@ -222,18 +229,12 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
   }
 }
 
-Future<void> play(var player) async {
+Future<void> play(var player, var freq) async {
+  player.setAsset('assets/'+freq);
   player.play(); // Usually you don't want to wait for playback to finish.
   //await player.seek(Duration(seconds: 10));
   //await player.pause();
 }
-
-/*
-Future<void> playFile() async {
-  final file = new File('${(await getTemporaryDirectory()).path}/330.wav');
-  await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
-  final result = await audioPlayer.play(file.path, isLocal: true);
-}*/
 
 class FaceOutlinePainter extends CustomPainter {
   int firstDay = 0;
