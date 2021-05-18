@@ -1,8 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
-
+import 'package:path_provider/path_provider.dart';
+import 'package:just_audio/just_audio.dart';
+/*
+E2	82.41
+A2	110
+D3	146.83
+G3	196
+B3	246.94
+E4	329.63
+ */
+typedef Fn = void Function();
 void main() {
   runApp(MaterialApp(home: MyApp()));
 }
@@ -11,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'SharedPreferences Demo',
+      title: 'Learn the Neck Tuner',
       home: new SharedPreferencesDemo(),
     );
   }
@@ -26,45 +36,182 @@ class SharedPreferencesDemo extends StatefulWidget {
 
 class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
   int firstDay = 0;
+  final player = AudioPlayer(
+    userAgent: 'myradioapp/1.0 (Linux;Android 11) https://myradioapp.com',
+  );
+
+
   Future<SharedPreferences> _sprefs = SharedPreferences.getInstance();
 
   Future<Null> getData() async {
     final SharedPreferences prefs = await _sprefs;
-    int data = prefs.getInt('firstDay') ?? 8;
+    int data = prefs.getInt('firstDay') ?? 2;
     this.setState(() {
       firstDay = data;
     });
+    var duration = await player.setAsset('assets/330.wav');
   }
 
   Future<Null> incrementCounter() async {
     final SharedPreferences prefs = await _sprefs;
     setState(() {
       firstDay = firstDay + 1;
-      prefs.setString('firstDay', firstDay.toString());
+      prefs.setInt('firstDay', firstDay);
     });
+  }
+
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await player.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+
     getData();
   }
+
+
 
 //      child:new Text(counter.toString())
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text("SharedPreferences Demo"),
+        title: const Text("Learn the Neck Tuner"),
       ),
-      body: new Center(
-        child: Container(
-          // pass double.infinity to prevent shrinking of the painter area to 0.
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.white60,
-          child: CustomPaint(painter: FaceOutlinePainter(firstDay)),
-        ),
+      body: IntrinsicHeight(
+        child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Expanded(
+            child: CustomPaint(painter: FaceOutlinePainter(firstDay)),
+          ),
+          Expanded(
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      firstDay = 0;
+                    });
+                  },
+                  child: Text('A'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      firstDay = 1;
+                    });
+                  },
+                  child: Text('B'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      firstDay = 2;
+                    });
+                  },
+                  child: Text('C'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      firstDay = 3;
+                    });
+                  },
+                  child: Text('D'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      firstDay = 4;
+                    });
+                    play(player);
+                  },
+                  child: Text('E'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      firstDay = 5;
+                    });
+                  },
+                  child: Text('F'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      firstDay = 6;
+                    });
+                  },
+                  child: Text('G'),
+                ),
+              ),
+            ]),
+          ),
+        ]),
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: incrementCounter,
@@ -75,12 +222,23 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
   }
 }
 
+Future<void> play(var player) async {
+  player.play(); // Usually you don't want to wait for playback to finish.
+  //await player.seek(Duration(seconds: 10));
+  //await player.pause();
+}
+
+/*
+Future<void> playFile() async {
+  final file = new File('${(await getTemporaryDirectory()).path}/330.wav');
+  await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
+  final result = await audioPlayer.play(file.path, isLocal: true);
+}*/
+
 class FaceOutlinePainter extends CustomPainter {
   int firstDay = 0;
 
-  FaceOutlinePainter(int firstDay) {
-    this.firstDay = firstDay;
-  }
+  FaceOutlinePainter(this.firstDay);
 
   @override
   Future<void> paint(Canvas canvas, Size size) async {
@@ -96,7 +254,7 @@ class FaceOutlinePainter extends CustomPainter {
     drawStrings(canvas, squareSize, paint);
 
     drawMarkers(squareSize, paint, canvas);
-    var week = dayDiff(firstDay);
+    var week = firstDay; //dayDiff(firstDay);
     for (double across = 0; across < 6; across++)
       drawCircles(across, squareSize, paint, canvas, week);
   }
