@@ -3,39 +3,55 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:just_audio/just_audio.dart';
 import 'ui/FingerboardPainter.dart';
 import 'ui/SoundButton.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
-/*
-E2	82.41
-A2	110
-D3	146.83
-G3	196
-B3	246.94
-E4	329.63
- */
 typedef Fn = void Function();
 
 void main() {
   runApp(MaterialApp(home: MyApp()));
 }
 
+/*
+      home: new SharedPreferencesDemo(),
+
+
+      home: ResponsiveWrapper.builder(
+        SharedPreferencesDemo(),
+        maxWidth: 1200,
+        minWidth: 480,
+        breakpoints: [
+          ResponsiveBreakpoint.resize(480, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(480, name: TABLET),
+        ],
+      ),
+ */
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Learn the Neck Tuner',
-      home: new SharedPreferencesDemo(),
+      home: ResponsiveWrapper.builder(
+        Tuner(),
+        maxWidth: 1200,
+        minWidth: 480,
+        breakpoints: [
+          ResponsiveBreakpoint.resize(480, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(480, name: TABLET),
+          ResponsiveBreakpoint.autoScale(280, name: PHONE),
+        ],
+      ),
     );
   }
 }
 
-class SharedPreferencesDemo extends StatefulWidget {
-  SharedPreferencesDemo({Key? key}) : super(key: key);
+class Tuner extends StatefulWidget {
+  Tuner({Key? key}) : super(key: key);
 
   @override
-  SharedPreferencesDemoState createState() => new SharedPreferencesDemoState();
+  TunerState createState() => new TunerState();
 }
 
-class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
+class TunerState extends State<Tuner> {
   int firstDay = 0;
   final player = AudioPlayer(
     userAgent: 'myradioapp/1.0 (Linux;Android 11) https://myradioapp.com',
@@ -72,6 +88,16 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
     getData();
   }
 
+  bool isPlaying = false;
+
+  void playNote() {
+    if (isPlaying)
+      player.stop();
+    else
+      play(player, data[firstDay]);
+    isPlaying = !isPlaying;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -80,87 +106,89 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
       ),
       body: GuitarNeck(),
       floatingActionButton: new FloatingActionButton(
-        onPressed: incrementCounter,
+        onPressed: playNote,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
     );
   }
 
+  final data = [
+    "220_",
+    "246_94",
+    "261_63",
+    "293_66",
+    "329_63",
+    "349_23",
+    "392_"
+  ];
+
   IntrinsicHeight GuitarNeck() {
     return IntrinsicHeight(
+      //sizes its child to the child's intrinsic height.
       child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Expanded(
           child: CustomPaint(painter: FingerboardPainter(firstDay)),
         ),
-        Expanded(
-          child: Column(children: [
-            SoundButton(
-              name: "A",
-              btn: () => setState(() {
-                firstDay = 0;
-                play(player, "220_.mp3");
-              }),
-            ),              SoundButton(
-              name: "B",
-              btn: () => setState(() {
-                firstDay = 1;
-                play(player, "246_94.mp3");
-              }),
-            ),
-            SoundButton(
-              name: "C",
-              btn: () => setState(() {
-                firstDay = 2;
-                play(player, "261_63.mp3");
-              }),
-            ),
-            SoundButton(
-              name: "D",
-              btn: () => setState(() {
-                firstDay = 3;
-                play(player, "293_66.mp3");
-              }),
-            ),
-            SoundButton(
-              name: "E",
-              btn: () => setState(() {
-                firstDay = 4;
-                play(player, "329_63.mp3");
-              }),
-            ),
-            SoundButton(
-              name: "F",
-              btn: () => setState(() {
-                firstDay = 5;
-                play(player, "349_23.mp3");
-              }),
-            ),
-            SoundButton(
-              name: "G",
-              btn: () => setState(() {
-                firstDay = 6;
-                play(player, "392_.mp3");
-              }),
-            ),
-            SoundButton(
-              name: "Stop",
-              btn: () => setState(() {
-                player.stop();
-              }),
-            ),
-          ]),
-        ),
+        Column(children: [
+          SoundButton(
+            name: "A",
+            btn: () => setState(() {
+              firstDay = 0;
+              if (isPlaying) play(player, data[firstDay]);
+            }),
+          ),
+          SoundButton(
+            name: "B",
+            btn: () => setState(() {
+              firstDay = 1;
+              if (isPlaying) play(player, data[firstDay]);
+            }),
+          ),
+          SoundButton(
+            name: "C",
+            btn: () => setState(() {
+              firstDay = 2;
+              if (isPlaying) play(player, data[firstDay]);
+            }),
+          ),
+          SoundButton(
+            name: "D",
+            btn: () => setState(() {
+              firstDay = 3;
+              if (isPlaying) play(player, data[firstDay]);
+            }),
+          ),
+          SoundButton(
+            name: "E",
+            btn: () => setState(() {
+              firstDay = 4;
+              if (isPlaying) play(player, data[firstDay]);
+            }),
+          ),
+          SoundButton(
+            name: "F",
+            btn: () => setState(() {
+              firstDay = 5;
+              if (isPlaying) play(player, data[firstDay]);
+            }),
+          ),
+          SoundButton(
+            name: "G",
+            btn: () => setState(() {
+              firstDay = 6;
+              if (isPlaying) play(player, data[firstDay]);
+            }),
+          ),
+        ]),
       ]),
     );
   }
 }
 
 Future<void> play(var player, var freq) async {
-  player.setAsset('assets/' + freq);
+  player.setAsset('assets/' + freq + ".mp3");
   player.play(); // Usually you don't want to wait for playback to finish.
   //await player.seek(Duration(seconds: 10));
   //await player.pause();
 }
-
-
