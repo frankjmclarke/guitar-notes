@@ -33,7 +33,6 @@ void drawFrets(canvas, squareSize, paint) {
   double half = squareSize / 2;
   paint.color = Colors.cyan;
   for (double down = 0; down < 13; down++) {
-    //
     canvas.drawLine(Offset(half, down * squareSize + half),
         Offset(squareSize * 5.5, down * squareSize + half), paint);
   }
@@ -58,11 +57,13 @@ void drawCircles(across, squareSize, paint, canvas, week) {
     [3, 10, 5, 0, 8, 3],
   ];
   paint.style = PaintingStyle.fill;
-  double fontsize = squareSize / 1.3;
+
   final textStyle = TextStyle(
     color: Colors.red,
     fontSize: 30,
   );
+
+  double fontsize = squareSize / 1.3;
   final textStyle2 = TextStyle(
     color: Colors.white,
     fontSize: fontsize,

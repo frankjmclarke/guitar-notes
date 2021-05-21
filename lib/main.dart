@@ -1,3 +1,4 @@
+import 'package:delme/ui/CustomRadio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:just_audio/just_audio.dart';
@@ -11,20 +12,6 @@ void main() {
   runApp(MaterialApp(home: MyApp()));
 }
 
-/*
-      home: new SharedPreferencesDemo(),
-
-
-      home: ResponsiveWrapper.builder(
-        SharedPreferencesDemo(),
-        maxWidth: 1200,
-        minWidth: 480,
-        breakpoints: [
-          ResponsiveBreakpoint.resize(480, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(480, name: TABLET),
-        ],
-      ),
- */
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -56,7 +43,7 @@ class TunerState extends State<Tuner> {
   final player = AudioPlayer(
     userAgent: 'myradioapp/1.0 (Linux;Android 11) https://myradioapp.com',
   );
-
+  List<RadioModel> sampleData = <RadioModel>[]; //List<RadioModel>();
   Future<SharedPreferences> _sprefs = SharedPreferences.getInstance();
 
   Future<Null> getData() async {
@@ -86,6 +73,13 @@ class TunerState extends State<Tuner> {
     super.initState();
 
     getData();
+    sampleData.add(new RadioModel(false, 'A', 'April 18'));
+    sampleData.add(new RadioModel(false, 'B', 'April 17'));
+    sampleData.add(new RadioModel(false, 'C', 'April 16'));
+    sampleData.add(new RadioModel(false, 'D', 'April 15'));
+    sampleData.add(new RadioModel(false, 'E', 'April 18'));
+    sampleData.add(new RadioModel(false, 'F', 'April 17'));
+    sampleData.add(new RadioModel(false, 'G', 'April 16'));
   }
 
   bool isPlaying = false;
@@ -104,7 +98,40 @@ class TunerState extends State<Tuner> {
       appBar: new AppBar(
         title: const Text("Learn the Neck Tuner"),
       ),
-      body: GuitarNeck(),
+      body: IntrinsicHeight(
+        child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(child: GuitarNeck()),
+              Expanded(
+                child: Container(
+                  height: 300,
+                  child: new ListView.builder(
+                    itemCount: sampleData.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return new InkWell(
+                        //highlightColor: Colors.red,
+                        splashColor: Colors.blueAccent,
+                        onTap: () {
+                          setState(() {
+                            sampleData.forEach(
+                                (element) => element.isSelected = false);
+                            sampleData[index].isSelected = true;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            new RadioItem(sampleData[index]),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ]),
+      ),
       floatingActionButton: new FloatingActionButton(
         onPressed: playNote,
         tooltip: 'Increment',
@@ -126,62 +153,7 @@ class TunerState extends State<Tuner> {
   IntrinsicHeight GuitarNeck() {
     return IntrinsicHeight(
       //sizes its child to the child's intrinsic height.
-      child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Expanded(
-          child: CustomPaint(painter: FingerboardPainter(firstDay)),
-        ),
-        Column(children: [
-          SoundButton(
-            name: "A",
-            btn: () => setState(() {
-              firstDay = 0;
-              if (isPlaying) play(player, data[firstDay]);
-            }),
-          ),
-          SoundButton(
-            name: "B",
-            btn: () => setState(() {
-              firstDay = 1;
-              if (isPlaying) play(player, data[firstDay]);
-            }),
-          ),
-          SoundButton(
-            name: "C",
-            btn: () => setState(() {
-              firstDay = 2;
-              if (isPlaying) play(player, data[firstDay]);
-            }),
-          ),
-          SoundButton(
-            name: "D",
-            btn: () => setState(() {
-              firstDay = 3;
-              if (isPlaying) play(player, data[firstDay]);
-            }),
-          ),
-          SoundButton(
-            name: "E",
-            btn: () => setState(() {
-              firstDay = 4;
-              if (isPlaying) play(player, data[firstDay]);
-            }),
-          ),
-          SoundButton(
-            name: "F",
-            btn: () => setState(() {
-              firstDay = 5;
-              if (isPlaying) play(player, data[firstDay]);
-            }),
-          ),
-          SoundButton(
-            name: "G",
-            btn: () => setState(() {
-              firstDay = 6;
-              if (isPlaying) play(player, data[firstDay]);
-            }),
-          ),
-        ]),
-      ]),
+      child: CustomPaint(painter: FingerboardPainter(firstDay)),
     );
   }
 }
