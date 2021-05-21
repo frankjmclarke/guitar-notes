@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:just_audio/just_audio.dart';
 import 'ui/FingerboardPainter.dart';
-import 'ui/SoundButton.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 typedef Fn = void Function();
@@ -84,10 +83,12 @@ class TunerState extends State<Tuner> {
   bool isPlaying = false;
 
   void playNote() {
-    if (isPlaying)
+    if (isPlaying && player.playing)
       player.stop();
-    else
+    else {
       play(player, data[firstDay]);
+      player.setLoopMode(LoopMode.one);
+    }
     isPlaying = !isPlaying;
   }
 
@@ -133,14 +134,30 @@ class TunerState extends State<Tuner> {
               ),
             ]),
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: playNote,
+      floatingActionButton:  FloatingActionButton(
+        child: fab,
+        onPressed: () => setState(() {
+          playNote();
+          if (fabIconNumber == 0) {
+            fab = Icon(
+              Icons.stop,
+            );
+            fabIconNumber = 1;
+          } else {
+            fab = Icon(Icons.play_arrow);
+            fabIconNumber = 0;
+          }
+        }),
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
 
+  Icon fab = Icon(
+    Icons.play_arrow,
+  );
+
+  int fabIconNumber = 0;
   final data = [
     "220_",
     "246_94",
