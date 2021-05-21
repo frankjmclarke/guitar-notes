@@ -71,15 +71,14 @@ class TunerState extends State<Tuner> {
   @override
   void initState() {
     super.initState();
-
     getData();
-    sampleData.add(new RadioModel(false, 'A', 'April 18'));
-    sampleData.add(new RadioModel(false, 'B', 'April 17'));
-    sampleData.add(new RadioModel(false, 'C', 'April 16'));
-    sampleData.add(new RadioModel(false, 'D', 'April 15'));
-    sampleData.add(new RadioModel(false, 'E', 'April 18'));
-    sampleData.add(new RadioModel(false, 'F', 'April 17'));
-    sampleData.add(new RadioModel(false, 'G', 'April 16'));
+    sampleData.add(new RadioModel(false, 'A', '246.94.mp3'));
+    sampleData.add(new RadioModel(false, 'B', '261_63.mp3'));
+    sampleData.add(new RadioModel(false, 'C', '293_66.mp3'));
+    sampleData.add(new RadioModel(false, 'D', '293_66.mp3'));
+    sampleData.add(new RadioModel(false, 'E', '329_63.mp3'));
+    sampleData.add(new RadioModel(false, 'F', '349_23.mp3'));
+    sampleData.add(new RadioModel(false, 'G', '392_.mp3'));
   }
 
   bool isPlaying = false;
@@ -90,6 +89,11 @@ class TunerState extends State<Tuner> {
     else
       play(player, data[firstDay]);
     isPlaying = !isPlaying;
+  }
+
+  void playDifferentNote() {
+    if (isPlaying)
+      play(player, data[firstDay]);
   }
 
   @override
@@ -103,31 +107,28 @@ class TunerState extends State<Tuner> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Expanded(child: GuitarNeck()),
-              Expanded(
-                child: Container(
-                  height: 300,
-                  child: new ListView.builder(
-                    itemCount: sampleData.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new InkWell(
-                        //highlightColor: Colors.red,
-                        splashColor: Colors.blueAccent,
-                        onTap: () {
-                          setState(() {
-                            sampleData.forEach(
-                                (element) => element.isSelected = false);
-                            sampleData[index].isSelected = true;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            new RadioItem(sampleData[index]),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+              Expanded(child: GuitarNeck()),//max horizontal in row
+              Container(
+                height: 300,
+                width: 50,
+                child: new ListView.builder(
+                  itemCount: sampleData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new InkWell(
+                      highlightColor: Colors.lightBlueAccent,
+                      splashColor: Colors.blueAccent,
+                      onTap: () {
+                        setState(() {
+                          sampleData.forEach(
+                              (element) => element.isSelected = false);
+                          sampleData[index].isSelected = true;
+                        });
+                        firstDay = index;
+                        playDifferentNote();
+                      },
+                      child: new RadioItem(sampleData[index]),
+                    );
+                  },
                 ),
               ),
             ]),

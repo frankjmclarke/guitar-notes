@@ -1,52 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-class CustomRadio extends StatefulWidget {
-  @override
-  createState() {
-    return new CustomRadioState();
-  }
-}
-
-class CustomRadioState extends State<CustomRadio> {
-  List<RadioModel> sampleData = <RadioModel>[];//List<RadioModel>();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    sampleData.add(new RadioModel(false, 'A', 'April 18'));
-    sampleData.add(new RadioModel(false, 'B', 'April 17'));
-    sampleData.add(new RadioModel(false, 'C', 'April 16'));
-    sampleData.add(new RadioModel(false, 'D', 'April 15'));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("ListItem"),
-      ),
-      body: new ListView.builder(
-        itemCount: sampleData.length,
-        itemBuilder: (BuildContext context, int index) {
-          return new InkWell(
-            //highlightColor: Colors.red,
-            splashColor: Colors.blueAccent,
-            onTap: () {
-              setState(() {
-                sampleData.forEach((element) => element.isSelected = false);
-                sampleData[index].isSelected = true;
-              });
-            },
-            child: new RadioItem(sampleData[index]),
-          );
-        },
-      ),
-    );
-  }
-}
-
 class RadioItem extends StatelessWidget {
   final RadioModel _item;
   RadioItem(this._item);
@@ -55,12 +8,13 @@ class RadioItem extends StatelessWidget {
     return new Container(
       margin: new EdgeInsets.all(5.0),
       child: new Row(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           new Container(
             height: 25.0,
             width: 25.0,
             child: new Center(
+              widthFactor: 1,
               child: new Text(_item.buttonText,
                   style: new TextStyle(
                       color:
@@ -80,10 +34,6 @@ class RadioItem extends StatelessWidget {
               borderRadius: const BorderRadius.all(const Radius.circular(2.0)),
             ),
           ),
-          new Container(
-            margin: new EdgeInsets.only(left: 10.0),
-            child: new Text(_item.text),
-          )
         ],
       ),
     );
