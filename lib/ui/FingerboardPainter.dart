@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 
 class FingerboardPainter extends CustomPainter {
-  int firstDay = 0;
+  late int index;
 
-  FingerboardPainter(this.firstDay);
+  FingerboardPainter(this.index): super() {
+  }
 
   @override
   Future<void> paint(Canvas canvas, Size size) async {
@@ -20,9 +21,10 @@ class FingerboardPainter extends CustomPainter {
     drawStrings(canvas, squareSize, paint);
 
     drawMarkers(squareSize, paint, canvas);
-    var week = firstDay; //dayDiff(firstDay);
     for (double across = 0; across < 6; across++)
-      drawCircles(across, squareSize, paint, canvas, week);
+      drawCircles(across, squareSize, paint, canvas, index);
+
+    print("FingerboardPainter Paint " + this.index.toString());
   }
 
   @override

@@ -43,7 +43,5 @@ class RadioItem extends StatelessWidget {
 class RadioModel {
   bool isSelected;
   final String buttonText;
-  final String text;
-
-  RadioModel(this.isSelected, this.buttonText, this.text);
+  RadioModel(this.isSelected, this.buttonText);
 }
