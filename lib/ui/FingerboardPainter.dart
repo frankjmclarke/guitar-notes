@@ -14,7 +14,7 @@ class FingerboardPainter extends CustomPainter {
       ..strokeWidth = 4.0
       ..color = Colors.indigo;
 
-    double squareSize = size.height / 10.0;
+    double squareSize = size.height / 13;
 
     //drawRect(canvas, squareSize, paint);
     drawFrets(canvas, squareSize, paint);

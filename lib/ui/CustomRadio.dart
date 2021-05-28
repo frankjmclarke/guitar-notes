@@ -5,14 +5,17 @@ class RadioItem extends StatelessWidget {
   RadioItem(this._item);
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return new Container(
+      width: deviceHeight/16,
       margin: new EdgeInsets.all(5.0),
       child: new Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           new Container(
-            height: 25.0,
-            width: 25.0,
+            height: deviceHeight/20,
+            width: deviceHeight/18,
             child: new Center(
               widthFactor: 1,
               child: new Text(_item.buttonText,
@@ -20,7 +23,7 @@ class RadioItem extends StatelessWidget {
                       color:
                       _item.isSelected ? Colors.white : Colors.black,
                       //fontWeight: FontWeight.bold,
-                      fontSize: 18.0)),
+                      fontSize: deviceHeight/22.0)),
             ),
             decoration: new BoxDecoration(
               color: _item.isSelected

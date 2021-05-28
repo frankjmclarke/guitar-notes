@@ -4,9 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'model/Audio.dart';
 import 'ui/FingerboardPainter.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
 
 typedef Fn = void Function();
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp
+  ]);
   runApp(MaterialApp(home: MyApp()));
 }
 
@@ -40,6 +46,7 @@ class TunerState extends State<Tuner> {
   var audio = new Audio();
   List<RadioModel> radioData = <RadioModel>[]; //List<RadioModel>();
   Future<SharedPreferences> _sprefs = SharedPreferences.getInstance();
+  bool _alreadySaved=false;
 
   Future<Null> getData() async {
     final SharedPreferences prefs = await _sprefs;
@@ -88,91 +95,97 @@ class TunerState extends State<Tuner> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return new Scaffold(
       appBar: new AppBar(
         title: const Text("Learn the Neck Tuner"),
       ),
-      body: IntrinsicHeight(
-        child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(child: GuitarNeck()), //max horizontal in row
-              Column(
-                children: [
-                  Container(
-                    height: 250,
-                    width: 50,
-                    child: new ListView.builder(
-                      itemCount: radioData.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        print("ListView.builder " + index.toString() + " "+ radioData[index].isSelected.toString());
-                        return new InkWell(
-                          highlightColor: Colors.lightBlueAccent,
-                          splashColor: Colors.blueAccent,
-                          onTap: () {
-                            setState(() {
-                              radioData
-                                  .forEach((element) => element.isSelected = false);
-                              radioData[index].isSelected = true;
-                            });
-                            audio.selected = index;
-                            setCounter(index);
-                            audio.playDifferentNote();
+      body: SafeArea(
+        child: IntrinsicHeight(
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  height: deviceHeight * 0.95,
+                  width: deviceWidth * 0.80,
+                  child: GuitarNeck(), //max horizontal in row
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: deviceHeight*0.5,
+                        width: 50,
+                        child: new ListView.builder(
+                          itemCount: radioData.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            print("ListView.builder " + index.toString() + " "+ radioData[index].isSelected.toString());
+                            return new InkWell(
+                              highlightColor: Colors.lightBlueAccent,
+                              splashColor: Colors.blueAccent,
+                              onTap: () {
+                                setState(() {
+                                  radioData
+                                      .forEach((element) => element.isSelected = false);
+                                  radioData[index].isSelected = true;
+                                });
+                                audio.selected = index;
+                                setCounter(index);
+                                audio.playDifferentNote();
+                              },
+                              child: new RadioItem(radioData[index]),
+                            );
                           },
-                          child: new RadioItem(radioData[index]),
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: IconButton(
-                      icon: Icon(Icons.volume_up),
-                      onPressed: () {
-                        if (audio.volume < 0.95) {
-                          audio.volume += 0.1;
-                          saveVolume(audio.volume);
-                          audio.setVolume();
-                        }
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: IconButton(
+                          icon: Icon(Icons.volume_up),
+                          onPressed: () {
+                            if (audio.volume < 0.95) {
+                              audio.volume += 0.1;
+                              saveVolume(audio.volume);
+                              audio.setVolume();
+                            }
 
-                      },
-                    ),
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: IconButton(
+                          icon: Icon(Icons.volume_down),
+                          onPressed: () {
+                            if (audio.volume > 0.05) {
+                              audio.volume -= 0.1;
+                              saveVolume(audio.volume);
+                              audio.setVolume();
+                            }
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: IconButton(
+                          icon: new Icon(
+                            _alreadySaved ? Icons.stop : Icons.play_arrow,
+                            color: _alreadySaved ? null : Colors.red,
+                          ),
+                          onPressed: () => setState(() {
+                            setCounter(audio.selected);
+                            audio.playNote();
+                            _alreadySaved = !_alreadySaved;
+                          }),
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: IconButton(
-                      icon: Icon(Icons.volume_down),
-                      onPressed: () {
-                        if (audio.volume > 0.05) {
-                          audio.volume -= 0.1;
-                          saveVolume(audio.volume);
-                          audio.setVolume();
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ]),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: fab,
-        onPressed: () => setState(() {
-
-          setCounter(audio.selected);
-          audio.playNote();
-          if (fabIconNumber == 0) {
-            fab = Icon(
-              Icons.stop,
-            );
-            fabIconNumber = 1;
-          } else {
-            fab = Icon(Icons.play_arrow);
-            fabIconNumber = 0;
-          }
-        }),
-        tooltip: 'Increment',
+                ),
+              ]),
+        ),
       ),
     );
   }
