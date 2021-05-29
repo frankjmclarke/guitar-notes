@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:local_pubsub/local_pubsub.dart';
 
 
 class FingerboardPainter extends CustomPainter {
   late int index;
 
-  FingerboardPainter(this.index): super() {
-  }
+  FingerboardPainter(this.index): super();
 
   @override
   Future<void> paint(Canvas canvas, Size size) async {
@@ -13,6 +13,7 @@ class FingerboardPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
       ..color = Colors.indigo;
+    print("finger MESSAGE " + index.toString());
 
     double squareSize = size.height / 13;
 
@@ -24,7 +25,7 @@ class FingerboardPainter extends CustomPainter {
     for (double across = 0; across < 6; across++)
       drawCircles(across, squareSize, paint, canvas, index);
 
-    print("FingerboardPainter Paint " + this.index.toString());
+    //print("FingerboardPainter Paint " + this.index.toString());
   }
 
   @override

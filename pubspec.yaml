@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   just_audio: ^0.7.4+1
   responsive_framework: ^0.1.0
-  #local_pubsub: ^1.0.3
+  local_pubsub: ^1.0.3
 
 dev_dependencies:
   flutter_test:
