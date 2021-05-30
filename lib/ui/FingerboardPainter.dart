@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:local_pubsub/local_pubsub.dart';
 
 
 class FingerboardPainter extends CustomPainter {

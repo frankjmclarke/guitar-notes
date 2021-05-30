@@ -1,4 +1,4 @@
-import 'package:delme/ui/TunerState.dart';
+import 'package:delme/ui/Tuner.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
