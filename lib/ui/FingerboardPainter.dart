@@ -1,10 +1,22 @@
+import 'package:delme/infra/PubSubClass.dart';
 import 'package:flutter/material.dart';
+import 'package:local_pubsub/local_pubsub.dart';
 
 
 class FingerboardPainter extends CustomPainter {
   late int index;
+  late Subscription? sub;
 
   FingerboardPainter(this.index): super();
+
+  FingerboardPainter.name(this.index): super(){
+    sub = PubSubClass.shared.subscribe('buttonPress');
+    sub?.stream?.listen((ind) {
+      print("FingerboardPainter buttonPress " + index.toString() + " " );
+      index = ind;
+
+    });
+  }
 
   @override
   Future<void> paint(Canvas canvas, Size size) async {
@@ -12,7 +24,6 @@ class FingerboardPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
       ..color = Colors.indigo;
-    print("finger MESSAGE " + index.toString());
 
     double squareSize = size.height / 13;
 

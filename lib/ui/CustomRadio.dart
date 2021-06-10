@@ -46,8 +46,7 @@ class RadioModel {
   bool isSelected;
   final String buttonText;
   int index;
-  final pubsub;
   int prev = -1;
 
-  RadioModel(this.isSelected, this.buttonText, this.index, this.pubsub);
+  RadioModel(this.isSelected, this.buttonText, this.index);
 }
